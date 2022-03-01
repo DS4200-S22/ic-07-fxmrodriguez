@@ -16,7 +16,7 @@ const margin = {left:50, right:50, bottom:50, top:50};
 const yTooltipOffset = 15; 
 
 
-// TODO: What does this code do? 
+// Make an svg elemetn to be added to the html file
 const svg1 = d3
   .select("#hard-coded-bar")
   .append("svg")
@@ -41,27 +41,27 @@ const data1 = [
 
 */ 
 
-// TODO: What does this code do? 
+// Find maximum score in data1
 let maxY1 = d3.max(data1, function(d) { return d.score; });
 
-// TODO: What does each line of this code do?   
+// Scale the data by provided range
 let yScale1 = d3.scaleLinear()
             .domain([0,maxY1])
             .range([height-margin.bottom,margin.top]); 
 
-// TODO: What does each line of this code do? 
+// Scale how much space each bar takes up
 let xScale1 = d3.scaleBand()
             .domain(d3.range(data1.length))
             .range([margin.left, width - margin.right])
             .padding(0.1); 
 
-// TODO: What does each line of this code do?  
+// Append to svg the graph, make attributes on left, call y scale to set scale, and set font size
 svg1.append("g")
    .attr("transform", `translate(${margin.left}, 0)`) 
    .call(d3.axisLeft(yScale1)) 
    .attr("font-size", '20px'); 
 
-// TODO: What does each line of this code do? 
+// add x data to graph, translate bar height, make axis data the x data
 svg1.append("g")
     .attr("transform", `translate(0,${height - margin.bottom})`) 
     .call(d3.axisBottom(xScale1) 
@@ -74,26 +74,26 @@ svg1.append("g")
 
 */
 
-// TODO: What does each line of this code do? 
+// get element by ID, append a dic with id tooltip 1 with opacity 0 (invisible) of class tooltip
 const tooltip1 = d3.select("#hard-coded-bar") 
                 .append("div") 
                 .attr('id', "tooltip1") 
                 .style("opacity", 0) 
                 .attr("class", "tooltip"); 
 
-// TODO: What does each line of this code do?  
+// on mouseover, make tooltip visible
 const mouseover1 = function(event, d) {
   tooltip1.html("Name: " + d.name + "<br> Score: " + d.score + "<br>") 
           .style("opacity", 1);  
 }
 
-// TODO: What does each line of this code do? 
+// on mouse move, move the tooltip
 const mousemove1 = function(event, d) {
   tooltip1.style("left", (event.x)+"px") 
           .style("top", (event.y + yTooltipOffset) +"px"); 
 }
 
-// TODO: What does this code do? 
+// on mouse leaving bar, make tooltip invisible again
 const mouseleave1 = function(event, d) { 
   tooltip1.style("opacity", 0); 
 }
@@ -104,7 +104,8 @@ const mouseleave1 = function(event, d) {
 
 */
 
-// TODO: What does each line of this code do? 
+// select all bar elements, get data, enter data, append bar of class par with x and y data,
+// height based on data and x based on width, on mouseover, move, and leave, implement functions
 svg1.selectAll(".bar") 
    .data(data1) 
    .enter()  
@@ -118,6 +119,42 @@ svg1.selectAll(".bar")
      .on("mousemove", mousemove1)
      .on("mouseleave", mouseleave1);
 
+d3.csv("data/barchart.csv", function(data) {
+    console.log(data);
+
+   let svg1 = d3
+  .select("#csv-bar")
+  .append("svg")
+  .attr("width", width-margin.left-margin.right)
+  .attr("height", height - margin.top - margin.bottom)
+  .attr("viewBox", [0, 0, width, height]);
+
+  let maxY2 = d3.max(data1, function(d) { return d.score; });
+
+// Scale the data by provided range
+let yScale2 = d3.scaleLinear()
+            .domain([0,maxY2])
+            .range([height-margin.bottom,margin.top]); 
+
+// Scale how much space each bar takes up
+let xScale2 = d3.scaleBand()
+            .domain(d3.range(data.length))
+            .range([margin.left, width - margin.right])
+            .padding(0.1); 
+
+// Append to svg the graph, make attributes on left, call y scale to set scale, and set font size
+svg2.append("g")
+   .attr("transform", `translate(${margin.left}, 0)`) 
+   .call(d3.axisLeft(yScale2)) 
+   .attr("font-size", '20px'); 
+
+// add x data to graph, translate bar height, make axis data the x data
+svg2.append("g")
+    .attr("transform", `translate(0,${height - margin.bottom})`) 
+    .call(d3.axisBottom(xScale2) 
+            .tickFormat(i => data[i].name))  
+    .attr("font-size", '20px'); 
+});
 
 
 
